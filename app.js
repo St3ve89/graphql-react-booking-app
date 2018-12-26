@@ -30,7 +30,8 @@ app.use('/graphql', graphqlhttp({
       const eventName = args.name;
       return eventName;
     }
-  }
+  },
+  graphiql: true
 }));
 
 app.listen(3000);
