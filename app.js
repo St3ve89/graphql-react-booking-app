@@ -64,7 +64,7 @@ app.use('/graphql', graphqlhttp({
         throw err
       })
     },
-    createEvent: (args) => {
+    createEvent: args => {
       const event = new Event({
         title: args.eventInput.title,
         description: args.eventInput.description,
@@ -73,24 +73,26 @@ app.use('/graphql', graphqlhttp({
         creator: '5c268bab6d7e191d7ce7864a'
       });
       let createdEvent;
-      return event.save().then(result => {
-        createdEvent = {...result._doc, _id: result._doc._id.toString() };
-        return User.findById('5c268bab6d7e191d7ce7864a')
-      })
-      .then(user => {
-        if(!user) {
-          throw new Error('User not found.')
-        }
-        user.createdEvents.push(event);
-        return user.save();
-      })
-      .then(result => {
-        return createdEvent;
-      })
-      .catch(err => {
-        console.log(err);
-        throw err;
-      });
+      return event
+        .save()
+        .then(result => {
+          createdEvent = {...result._doc, _id: result._doc._id.toString() };
+          return User.findById('5c268bab6d7e191d7ce7864a')
+        })
+        .then(user => {
+          if(!user) {
+            throw new Error('User not found.')
+          }
+          user.createdEvents.push(event);
+          return user.save();
+        })
+        .then(result => {
+          return createdEvent;
+        })
+        .catch(err => {
+          console.log(err);
+          throw err;
+        });
     },
     createUser: args => {
       return User.findOne({email: args.userInput.email})
