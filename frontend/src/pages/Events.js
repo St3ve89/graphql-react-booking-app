@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
-import './Events.css';
+import Modal from '../components/modal/Modal';
 
+import './Events.css';
 
 class EventsPage extends Component {
   render () {
     return (
-      <div className="events-control">
-        <p>Share your own Events!</p>
-        <button className="btn">Create Event</button>
-      </div>
+      <React.Fragment>
+        <Modal title="Add Event" canCancel="true" canConfirm="true">
+          <p>Modal content</p>
+        </Modal>
+        <div className="events-control">
+          <p>Share your own Events!</p>
+          <button className="btn">Create Event</button>
+        </div>
+      </React.Fragment>
     );
   }
 }
