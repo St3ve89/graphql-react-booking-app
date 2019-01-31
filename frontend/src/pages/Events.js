@@ -151,7 +151,38 @@ class EventsPage extends Component {
   }
 
   bookEventHandler = () => {
+    if(!this.context.token) {
+      this.setState({selectedEvent: null});
+      return
+    }
+    const requestBody = {
+      query: `
+          mutation {
+            bookEvent(eventId: "${this.state.selectedEvent._id}") {
+              _id
+              createdAt
+              updatedAt
+            }
+          }
+        `
+  };
 
+  const token = this.context.token;
+
+  fetch('http://localhost:8000/graphql', {
+    method: 'POST',
+    body: JSON.stringify(requestBody),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.context.token
+    }
+  }).then(resData => {
+    console.log(resData);
+    this.setState({selectedEvent: null});
+  })
+  .catch(err => {
+    console.log(err);
+  });
   };
 
   render () {
@@ -159,7 +190,7 @@ class EventsPage extends Component {
     return (
       <React.Fragment>
         {(this.state.creating || this.state.selectedEvent) && <Backdrop />}
-        {this.state.creating && <Modal title="Add Event" canCancel="true" canConfirm="true" onCancel={this.modalCancelHandler} onConfirm={this.modalConfirmHandler} confirmText="Cancel">
+        {this.state.creating && <Modal title="Add Event" canCancel="true" canConfirm="true" onCancel={this.modalCancelHandler} onConfirm={this.modalConfirmHandler} confirmText={this.context.token ? 'Book' : 'Confirm'}>
           <form>
             <div className="form-control">
               <label htmlFor="title">title</label>
